@@ -1,0 +1,35 @@
+.hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  background-image: url('../../assets/images/main-img.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+}
+
+.hero--home {
+  height: 422px;
+}
+
+.hero--other {
+  height: 251px;
+}
+
+.hero__title {
+  margin: 223px 0 0 0;
+  font-weight: 700;
+  font-size: 47px;
+  line-height: 100%;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+}
+
+.hero__title--other {
+  margin: 139px 0 0 0;
+  font-size: 48px;
+}

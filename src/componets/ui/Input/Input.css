@@ -1,0 +1,58 @@
+.input__wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 90px;
+}
+
+.input__label {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: #000000D9;  
+}
+
+.input__required {
+  margin: 0 4px 0 0;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: right;
+  color: #FF4D4F;
+}
+
+.input {
+  padding: 5px 12px;
+  border: 1px solid #E0E0E0;
+  border-radius: 2px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  vertical-align: middle;
+  color: #141414;
+  background-color: #FFFFFF;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input:focus {
+  border-color: #FFA902;
+}
+
+.input--error {
+  border-color: #FF4D4F;
+}
+
+.input--error:focus {
+  border-color: #FF4D4F;
+}
+
+.input__error-message {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  color: #FF4D4F;
+  margin-top: 4px;
+  min-height: 21px;
+}
+

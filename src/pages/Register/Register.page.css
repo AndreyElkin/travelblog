@@ -1,0 +1,35 @@
+.register {
+  display: flex;
+  height: 100vh;
+  padding: 28px 0;
+  margin: 0 0 60px 0;
+  flex-direction: column;
+  align-items: center;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+}
+
+.register__form {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 695px;
+}
+
+.register__title {
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 100%;
+  text-align: center;
+  color: #141414;
+}
+
+.register__passwordblock {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
+

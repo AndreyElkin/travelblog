@@ -1,0 +1,102 @@
+button {
+  height: 51px;
+  padding: 19px 0;
+  background: #FFA902;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 13px;
+  text-align: center;
+  color: #FFFFFF;
+  cursor: pointer;
+  }
+
+  .button__variant-outline {
+    padding: 13px 10px;
+    background: transparent;
+    border: 1px solid #FFA902;
+    color: #FFA902;
+    border: 2px solid #FFA902;
+    text-align: center;
+  }
+
+  .button__variant-link {
+    background: transparent;
+    border: none;
+    color: #FFA902;
+    text-align: center;
+  }
+
+  .button__variant-img {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+  }
+
+  .button__variant-upload {
+    height: 32px;
+    padding: 0 16px 0 38px;
+    background-color: transparent;
+    color: #000000D9;
+    border: 1px solid #D9D9D9;
+    border-radius: 0;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    text-align: center;
+    box-shadow: 0px 2px 0px 0px #00000004;
+    cursor: pointer;
+  }
+
+  .button__variant-close {
+    width: 22px;
+    height: 24px;
+    padding: 0;
+    background-color: transparent;
+  }
+
+  .button__arrow-left {
+    background-image: url('../../../assets/images/arrow.svg');
+    background-repeat: no-repeat;
+    background-position: left 30px center;
+    background-size: 24px 24px;
+    padding-left: 40px;
+  }
+
+  .button__camera {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    background-image: url('../../../assets/images/photo-camera.svg');
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 32px 32px;
+    padding: 0 0 0 40px;
+  }
+
+  .button__edit {
+    background-image: url('../../../assets/images/carbon_edit.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 32px 32px;
+    padding: 0 0 0 40px;
+  }
+
+  .button__upload {
+    background-image: url('../../../assets/images/upload.svg');
+    background-repeat: no-repeat;
+    background-position: left 16px center;
+    background-size: 14px 14px;
+
+  }
+
+  .button__close {
+    background-image: url('../../../assets/images/close.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 21px 24px;
+  }

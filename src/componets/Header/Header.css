@@ -1,0 +1,20 @@
+.header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  padding: 29px 0 21px 0;
+  border-bottom: 1px solid #FFFFFF99;
+  
+}
+
+.header__user-link {
+  display: block;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 183%;
+  color: #FFFFFF;
+  text-decoration: none;
+}

@@ -1,34 +1,52 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from 'react'
+import { Routes, Route, useNavigate, useLocation } from 'react-router'
+import Layout from './componets/Layout/Layout'
+import Home from './pages/Home/Home'
+import Login from './pages/Login/Login'
+import Register from './pages/Register/Register'
+import Account from './pages/Account/Account'
+import AccountEdit from './pages/AccountEdit/AccountEdit'
+import Story from './pages/Story/Story'
+import Create from './pages/Create/Create'
+import Review from './pages/Review/Review'
+import { useAppDispatch, useAppSelector } from './store/hooks'
+import { fetchCurrentUser } from './store/slices/authSlice'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isAuthenticated, user, isLoading } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    
+    // Если есть токен, но нет пользователя - загружаем данные
+    if (token && !user && !isLoading) {
+      dispatch(fetchCurrentUser());
+    }
+  }, [dispatch, user, isLoading]);
+
+  useEffect(() => {
+    // Если пользователь авторизован, но данных нет - перенаправляем на редактирование
+    if (isAuthenticated && !user && !isLoading && location.pathname !== '/account/edit') {
+      navigate('/account/edit');
+    }
+  }, [isAuthenticated, user, isLoading, navigate, location.pathname]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/account/edit" element={<AccountEdit />} />
+        <Route path="/story/:id" element={<Story />} />
+        <Route path="/story/create" element={<Create />} />
+        <Route path="/story/review" element={<Review />} />
+      </Routes>
+    </Layout>
   )
 }
 
