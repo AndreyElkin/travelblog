@@ -32,4 +32,11 @@
   gap: 20px;
 }
 
+.register__button-block {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+}
+
 

@@ -83,7 +83,6 @@ class ApiService {
         method: 'POST',
         body: JSON.stringify(credentials),
       });
-      console.log('Login API response:', response);
       
       // Обрабатываем разные форматы ответа
       if (response.token && response.user) {
@@ -218,21 +217,64 @@ class ApiService {
   }
 
   async getPost(id: number): Promise<Post> {
-    return this.request<Post>(`/posts/${id}`);
+    const response = await this.request<any>(`/posts/${id}`);
+    // API может возвращать userInfo в ответе
+    return response as Post;
   }
 
   async createPost(data: FormData | Record<string, any>): Promise<Post> {
     const isFormData = data instanceof FormData;
-    const headers: HeadersInit = {};
     
-    if (!isFormData) {
-      headers['Content-Type'] = 'application/json';
+    if (isFormData) {
+      // Для FormData используем прямой fetch, чтобы браузер установил правильный Content-Type с boundary
+      const token = this.getAuthToken();
+      const headers: Record<string, string> = {
+        'Accept': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/posts`, {
+        method: 'POST',
+        headers,
+        body: data as FormData,
+      });
+
+      if (!response.ok) {
+        let error: ApiError;
+        try {
+          const errorData = await response.json();
+          let validationErrors: Record<string, string[]> = {};
+          
+          if (errorData.errors) {
+            validationErrors = errorData.errors;
+          } else if (errorData.messages) {
+            if (typeof errorData.messages === 'object' && !Array.isArray(errorData.messages)) {
+              validationErrors = errorData.messages;
+            }
+          }
+          
+          error = {
+            message: errorData.message || errorData.error || 'Ошибка создания поста',
+            errors: validationErrors,
+          };
+        } catch (parseError) {
+          error = {
+            message: `Ошибка ${response.status}: ${response.statusText}`,
+          };
+        }
+        throw error;
+      }
+
+      return response.json();
     }
 
+    // Для JSON запросов используем стандартный request
     return this.request<Post>('/posts', {
       method: 'POST',
-      headers,
-      body: isFormData ? data : JSON.stringify(data),
+      body: JSON.stringify(data),
     });
   }
 
@@ -258,14 +300,36 @@ class ApiService {
   }
 
   async getComments(postId: number): Promise<Comment[]> {
-    return this.request<Comment[]>(`/posts/${postId}/comments`);
+    const response = await this.request<any[]>(`/posts/${postId}/comments`);
+    console.log('API Comments Response:', response);
+    // Преобразуем ответ API в формат Comment (API может возвращать comment вместо text, full_name вместо name)
+    return response.map((item: any) => {
+      console.log('Comment item:', item);
+      return {
+        id: item.id,
+        post_id: item.post_id,
+        name: item.name || item.full_name || item.author_name || '',
+        text: item.text || item.comment || '',
+        created_at: item.created_at,
+        updated_at: item.updated_at,
+      };
+    }) as Comment[];
   }
 
-  async createComment(postId: number, data: { text: string; name?: string }): Promise<Comment> {
-    return this.request<Comment>(`/posts/${postId}/comments`, {
+  async createComment(postId: number, data: { comment: string; full_name: string }): Promise<Comment> {
+    const response = await this.request<any>(`/posts/${postId}/comments`, {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    // Преобразуем ответ API в формат Comment
+    return {
+      id: response.id,
+      post_id: response.post_id || postId,
+      name: response.name || response.full_name || data.full_name,
+      text: response.text || response.comment || data.comment,
+      created_at: response.created_at,
+      updated_at: response.updated_at,
+    } as Comment;
   }
 
   async logout(): Promise<void> {

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import image from '../../assets/images/img-card.jpg';
 import CardPost from '../../componets/ui/CardPost/CardPost';
 import Button from '../../componets/ui/Button/Button';
+import Spinner from '../../componets/ui/Spinner/Spinner';
 import './Home.page.css';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchPosts } from '../../store/slices/postsSlice';
@@ -28,11 +29,7 @@ function Home() {
 
   return (
     <section className="home container">
-      {isLoading && (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <p>Загрузка постов...</p>
-        </div>
-      )}
+      {isLoading && <Spinner />}
       {error && !isLoading && (
         <div style={{ padding: '20px', textAlign: 'center', color: 'red' }}>
           <p>Ошибка загрузки постов: {error}</p>

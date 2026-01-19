@@ -1,81 +1,164 @@
-import React from 'react';
+import { useEffect } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router';
 import './Story.page.css';
 import storyImage from '../../assets/images/img-story.jpg';
 import Comment from '../../componets/ui/Comment/Comment';
 import Button from '../../componets/ui/Button/Button';
-
+import Spinner from '../../componets/ui/Spinner/Spinner';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchPost, fetchComments, clearPost } from '../../store/slices/postSlice';
 
 const Story: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useAppDispatch();
+  const { post, comments, isLoading, isLoadingComments, error } = useAppSelector((state) => state.post);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (id) {
+      const postId = parseInt(id, 10);
+      if (!isNaN(postId)) {
+        dispatch(fetchPost(postId));
+        dispatch(fetchComments(postId));
+      }
+    }
+
+    return () => {
+      dispatch(clearPost());
+    };
+  }, [id, dispatch]);
+
+  // Обновляем комментарии при возврате на страницу из Review
+  useEffect(() => {
+    if (id && location.pathname === `/story/${id}`) {
+      const postId = parseInt(id, 10);
+      if (!isNaN(postId)) {
+        // Небольшая задержка, чтобы убедиться, что комментарий создан на сервере
+        const timeout = setTimeout(() => {
+          dispatch(fetchComments(postId));
+        }, 500);
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [location.pathname, id, dispatch]);
+
+  const handleBack = () => {
+    navigate('/');
+  };
+
+  const handleShowCommentForm = () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    if (id) {
+      navigate(`/story/review?postId=${id}`);
+    }
+  };
+
+  const formatDate = (dateString?: string): string => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
+  if (isLoading && !post) {
+    return (
+      <section className="story container">
+        <Spinner />
+      </section>
+    );
+  }
+
+  if (error && !post) {
+    return (
+      <section className="story container">
+        <div style={{ padding: '20px', textAlign: 'center', color: 'red' }}>
+          <p>Ошибка загрузки поста: {error}</p>
+          <Button text="Назад" width="145px" variant="outline" icon="arrow-left" onClick={handleBack} />
+        </div>
+      </section>
+    );
+  }
+
+  if (!post) {
+    return null;
+  }
+
+  const postImage = post.photo 
+    ? `https://travelblog.skillbox.cc${post.photo}` 
+    : (post.image || storyImage);
+
   return (
     <section className="story container">
-      <img className='story__img' src={storyImage} alt="" />
+      <img className='story__img' src={postImage} alt={post.title} />
       <div className='story__container'>
-      <h1 className='story__title'>Фуншал. Расслабленный и броский</h1>
-      <p className='story__description'>
-      Столичные города всегда полны достопримечательностей, 
-      даже если это маленькая столица совсем небольшого острова. 
-      Не всегда хватает времени, чтобы увидеть всё интересное, 
-      но даже то, что успели, трудно уместить в один рассказ. <br></br>
+        <h1 className='story__title'>{post.title}</h1>
+        <p className='story__description'>{post.description || post.excerpt || ''}</p>
+        
+        {post.userInfo && (
+          <div className='story__user-info' style={{ marginTop: '20px', padding: '15px', background: '#f5f5f5', borderRadius: '8px' }}>
+            <h3 style={{ margin: '0 0 10px 0', fontSize: '18px', fontWeight: 600 }}>Автор поста</h3>
+            <p style={{ margin: '5px 0', fontSize: '16px' }}><strong>ФИО:</strong> {post.userInfo.full_name}</p>
+            {post.userInfo.city && (
+              <p style={{ margin: '5px 0', fontSize: '16px' }}><strong>Город:</strong> {post.userInfo.city}</p>
+            )}
+            {post.userInfo.bio && (
+              <p style={{ margin: '5px 0', fontSize: '16px' }}><strong>О себе:</strong> {post.userInfo.bio}</p>
+            )}
+          </div>
+        )}
 
-      Кое-о чем я написала ранее: о катании на тобогане и канатной дороге, 
-      о красочном рынке Фуншала, о магнолиях в городском саду и о восхитительном парке 
-      на горе Монте Палас. Всё это основные развлечения из разряда «маст-ту-си», 
-      но в городе ещё много туристических локаций и атмосферных мест. 
-      <br></br>
+        <ul className='story__comments-list'>
+          {isLoadingComments ? (
+            <li key="loading" style={{ listStyle: 'none', width: '100%' }}>
+              <Spinner />
+            </li>
+          ) : comments.length > 0 ? (
+            comments.map((comment) => (
+              <li key={comment.id}>
+                <Comment 
+                  name={comment.name || 'Анонимный пользователь'} 
+                  date={formatDate(comment.created_at)} 
+                  text={comment.text} 
+                />
+              </li>
+            ))
+          ) : (
+            <li key="empty" style={{ padding: '20px', textAlign: 'center', color: '#999' }}>
+              <p>Комментариев пока нет</p>
+            </li>
+          )}
+        </ul>
 
-      Ближе к вечеру, когда мы возвращались с экскурсий по Мадейре, 
-      как правило оставалось время, чтобы погулять по Фуншалу самостоятельно и исследовать его 
-      в своем ритме. Город довольно симпатичный, не Лиссабон, конечно, 
-      но колоритности ему не занимать. 
-      <br></br>
-
-      По пути из отеля в исторический центр и обратно, 
-      мы каждый раз проходили мимо оживленной кольцевой развязки, 
-      украшенной прелестным фонтаном Ротонда-ду-Инфанте (Rotunda do Infante). 
-      Получилось, что именно встречей с этим фонтаном начинались и заканчивались 
-      все наши вечерние прогулки. 
-      Он стал для меня своеобразным символом и визитной карточкой Фуншала. 
-      <br></br>
-
-      Кольцевая развязка, пограничная между старой и более новой частями города, 
-      была спроектирована в 1945 году архитектором Фариа да Кошта, 
-      а скульптор Антониу Дуарте создал Ротонду. 
-      Оценить её вполне получилось в тот единственный раз, 
-      когда фонтан не работал: композиция представляет собой земной шар, 
-      заключенный в армиллярную сферу, из-под которой выпрыгивают четыре морских коня. 
-      Не знаю, почему не сфотографировала, наверно, на тот момент мысленно уже отдыхала в отеле.
-      <br></br>
-
-      Пару слов о нашем отеле. The Views Baia, оправдывая свое название, 
-      радовал роскошными видами на залив Фуншала, которые открывались из окон ресторана, 
-      а балкон в нашем номере «смотрел» на город и форт Пику, посвященный Иоанну Крестителю.
-      <br></br>
-
-      Интерьер, в оформлении которого присутствовали элементы бохо, 
-      был еще одной изюминкой отеля. Тем, кто любит предметы ручной работы 
-      из натуральных материалов, скорее всего, знаком этот термин. 
-      </p>
-      <ul className='story__comments-list'>
-        <li>
-          <Comment 
-          name="Алексей" 
-          date="27.12.2025" 
-          text="Интересный городок, узоры брусчатки, разрисованные двери, панно из плитки, вроде незначительные детали, а придают его лицу особый шарм завершенного образа. Сразу видно, какое место у памятника Роналду натирают на удачу" />
-        </li>
-        <li>
-          <Comment 
-          name="Алексей" 
-          date="27.12.2025" 
-          text="Интересный городок, узоры брусчатки, разрисованные двери, панно из плитки, вроде незначительные детали, а придают его лицу особый шарм завершенного образа. Сразу видно, какое место у памятника Роналду натирают на удачу" />
-        </li>
-
-      </ul>
-      <div className='story__button-block'>
-        <Button text="Назад" width="145px" variant="outline" icon="arrow-left" />
-        <Button text="Ваше впечатление об этом месте" width="338px" variant="primary" />
+        <div className='story__button-block'>
+          <Button 
+            text="Назад" 
+            width="145px" 
+            variant="outline" 
+            icon="arrow-left" 
+            onClick={handleBack}
+          />
+          {isAuthenticated && (
+            <Button 
+              text="Ваше впечатление об этом месте" 
+              width="338px" 
+              variant="primary" 
+              onClick={handleShowCommentForm}
+            />
+          )}
+        </div>
       </div>
-      </div>
-
     </section>
   );
 };

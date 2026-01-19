@@ -1,4 +1,5 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState } from 'react';
+import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import './Login.page.css';
 import Input from '../../componets/ui/Input/Input';

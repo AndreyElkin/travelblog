@@ -43,6 +43,13 @@ export interface Post {
   user_id?: number;
   created_at?: string;
   updated_at?: string;
+  userInfo?: {
+    full_name: string;
+    city?: string;
+    country?: string;
+    bio?: string;
+  };
+  comments?: Comment[];
 }
 
 export interface PostsResponse {
@@ -73,4 +80,12 @@ export interface UpdateUserRequest {
 export interface UpdatePasswordRequest {
   password: string;
   password_confirmation: string;
+}
+
+export interface CreatePostRequest {
+  title: string;
+  description: string;
+  country: string;
+  city: string;
+  photo?: File;
 }

@@ -1,4 +1,5 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState } from 'react';
+import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import Input from '../../componets/ui/Input/Input';
 import Button from '../../componets/ui/Button/Button';
@@ -104,6 +105,11 @@ const Register: React.FC = () => {
     navigate('/login');
   };
 
+  const handleLoginClick = () => {
+    dispatch(clearError());
+    navigate('/login');
+  };
+
 
   return (
     <section className="register">
@@ -162,21 +168,26 @@ const Register: React.FC = () => {
             autoComplete="new-password"
           />
         </div>
+        <div className='register__button-block'>
         <Button 
           text={isLoading ? "Регистрация..." : "Зарегистрироваться"} 
           width="234px" 
           variant="primary" 
           type="submit"
         />
+         <Button 
+            text="Войти" 
+            width="113px" 
+            variant="outline"
+            type="button"
+            onClick={handleLoginClick}
+          />
+        </div>
       </form>
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Регистрация успешна"
-        message="Вы успешно зарегистрировались! Теперь вы можете войти в систему."
-        type="success"
-        confirmText="ОК"
-        onConfirm={handleModalConfirm}
+        message="Вы успешно зарегистрировались!"
       />
     </section>
   );

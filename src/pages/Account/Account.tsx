@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import './Account.page.css';
 import photoUser from '../../assets/images/photo-user-1.jpg';
 import Button from '../../componets/ui/Button/Button';
+import Spinner from '../../componets/ui/Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchUserProfile } from '../../store/slices/profileSlice';
 
@@ -27,6 +28,14 @@ const Account: React.FC = () => {
     ? (displayUser.photo.startsWith('http') ? displayUser.photo : `https://travelblog.skillbox.cc${displayUser.photo}`)
     : photoUser;
 
+  if (isLoading && !displayUser) {
+    return (
+      <section className="account">
+        <Spinner />
+      </section>
+    );
+  }
+
   return (
     <section className="account">
         <div className="account__photo">
@@ -34,7 +43,7 @@ const Account: React.FC = () => {
         </div>
         <div className="account__info">
           <div className="account__info-item">
-            <h2 className="account__name">{displayUser?.full_name || 'Загрузка...'}</h2>
+            <h2 className="account__name">{displayUser?.full_name || ''}</h2>
             <Button text='' width='auto' variant='img' icon='edit' onClick={handleEditClick}></Button>
           </div>
           {displayUser?.city && (
