@@ -13,6 +13,13 @@
   justify-content: start;
 }
 
+.account-edit__photo img {
+  width: 240px;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 .account-edit__info {
   display: flex;
   flex-direction: column;

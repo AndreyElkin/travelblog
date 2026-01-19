@@ -3,8 +3,10 @@
 export interface User {
   id: number;
   email: string;
-  name: string;
-  avatar?: string;
+  full_name: string;
+  photo?: string;
+  city?: string;
+  bio?: string;
 }
 
 export interface LoginRequest {
@@ -59,4 +61,16 @@ export interface Comment {
   text: string;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface UpdateUserRequest {
+  full_name: string;
+  city?: string;
+  bio?: string;
+  photo?: File | string;
+}
+
+export interface UpdatePasswordRequest {
+  password: string;
+  password_confirmation: string;
 }

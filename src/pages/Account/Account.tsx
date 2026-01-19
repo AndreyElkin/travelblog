@@ -1,38 +1,54 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import './Account.page.css';
 import photoUser from '../../assets/images/photo-user-1.jpg';
 import Button from '../../componets/ui/Button/Button';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { fetchUserProfile } from '../../store/slices/profileSlice';
 
 const Account: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { user, isLoading } = useAppSelector((state) => state.profile);
+  const authUser = useAppSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if (!user && !isLoading) {
+      dispatch(fetchUserProfile());
+    }
+  }, [dispatch, user, isLoading]);
 
   const handleEditClick = () => {
     navigate('/account/edit');
   };
 
+  const displayUser = user || authUser;
+  const avatarUrl = displayUser?.photo 
+    ? (displayUser.photo.startsWith('http') ? displayUser.photo : `https://travelblog.skillbox.cc${displayUser.photo}`)
+    : photoUser;
+
   return (
     <section className="account">
         <div className="account__photo">
-          <img src={photoUser} alt="photo" />
-          <Button text="Изменить фото" width="auto" variant="link" icon="camera" />
+          <img src={avatarUrl} alt="photo" />
         </div>
         <div className="account__info">
           <div className="account__info-item">
-            <h2 className="account__name">Боярская Варвара Михайловна</h2>
+            <h2 className="account__name">{displayUser?.full_name || 'Загрузка...'}</h2>
             <Button text='' width='auto' variant='img' icon='edit' onClick={handleEditClick}></Button>
-            </div>
-          <span className="account__cyty">Город:</span>
-          <span className="account__city-value">Вышний Волочёк</span>
-          <span className="account__about">О себе:</span>
-          <p className="account__about-description">
-            Я обожаю путешествовать. Мне нравится открывать для себя новые места, 
-            знакомиться с разными культурами и традициями. 
-            Я всегда готова отправиться в путь, даже если это означает покинуть зону комфорта. 
-            В дороге я встречаю новых людей, учусь новому и наслаждаюсь красотами природы. 
-            Путешествия дают мне возможность расширить свой кругозор и узнать больше о мире вокруг меня. 
-            Я уверена, что каждый новый опыт делает меня сильнее и мудрее.
-          </p>
+          </div>
+          {displayUser?.city && (
+            <>
+              <span className="account__cyty">Город:</span>
+              <span className="account__city-value">{displayUser.city}</span>
+            </>
+          )}
+          {displayUser?.bio && (
+            <>
+              <span className="account__about">О себе:</span>
+              <p className="account__about-description">{displayUser.bio}</p>
+            </>
+          )}
         </div>
     </section>
   );

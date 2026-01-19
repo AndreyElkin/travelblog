@@ -80,6 +80,7 @@ const Login: React.FC = () => {
           }}
           type="email"
           name="email"
+          autoComplete="email"
         />
         <Input 
           label="Пароль"
@@ -96,6 +97,7 @@ const Login: React.FC = () => {
             }
           }}
           name="password"
+          autoComplete="current-password"
         />
         <div className='login__buttonblock'>
           <Button 

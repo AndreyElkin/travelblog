@@ -20,8 +20,12 @@ const Header: React.FC = () => {
           <Link className='header__user-link' to="/login">Войти</Link>
         ) : user ? (
           <User 
-            name={user.name} 
-            image={user.avatar || photoUserDefault} 
+            name={user.full_name} 
+            image={
+              user.photo 
+                ? (user.photo.startsWith('http') ? user.photo : `https://travelblog.skillbox.cc${user.photo}`)
+                : photoUserDefault
+            } 
           />
         ) : null}
       </div>

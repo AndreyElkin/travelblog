@@ -124,6 +124,7 @@ const Register: React.FC = () => {
           }}
           type="email"
           name="email"
+          autoComplete="email"
         />
         <div className='register__passwordblock'>
           <Input 
@@ -141,6 +142,7 @@ const Register: React.FC = () => {
               }
             }}
             name="password"
+            autoComplete="new-password"
           />
           <Input 
             label="Подтверждение пароля"
@@ -157,6 +159,7 @@ const Register: React.FC = () => {
               }
             }}
             name="password_confirmation"
+            autoComplete="new-password"
           />
         </div>
         <Button 

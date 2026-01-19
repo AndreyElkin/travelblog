@@ -16,30 +16,32 @@ const User: React.FC<UserProps> = ({ name, image }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const handleButtonClick = () => {
+  const handleUserClick = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleProfileClick = () => {
+  const handleProfileClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     navigate('/account');
     setIsOpen(false);
   };
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     dispatch(logoutUser());
     setIsOpen(false);
     navigate('/');
   };
 
   return (
-    <div className='user'>
+    <div className='user' onClick={handleUserClick}>
       <img className='user__image' src={image} alt={name} />
       <span className='user__name'>{name}</span>
-      <button className='user__button' onClick={handleButtonClick}>
+      <div className='user__arrow'>
         <img src={isOpen ? DropButtonUp : DropButtonDown} alt="drop-button" />
-      </button>
+      </div>
       {isOpen && (
-        <div className='user__dropdown'>
+        <div className='user__dropdown' onClick={(e) => e.stopPropagation()}>
           <button className='user__dropdown-button' onClick={handleProfileClick}>
             Профиль
           </button>

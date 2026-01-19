@@ -4,6 +4,7 @@
   align-items: center;
   width: 100%;
   gap: 10px;
+  cursor: pointer;
 }
 
 .user__image {
@@ -20,10 +21,10 @@
   color: #FFFFFF;
 }
 
-.user__button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
+.user__arrow {
+  display: flex;
+  align-items: center;
+  pointer-events: none;
 }
 
 .user__dropdown {

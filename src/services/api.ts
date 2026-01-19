@@ -6,7 +6,9 @@ import type {
   ApiError,
   Post,
   User,
-  Comment
+  Comment,
+  UpdateUserRequest,
+  UpdatePasswordRequest
 } from '../types/api';
 
 const API_BASE_URL = 'https://travelblog.skillbox.cc/api';
@@ -130,9 +132,87 @@ class ApiService {
     return this.request<User>('/user');
   }
 
-  async updateUser(data: Partial<User>): Promise<User> {
+  async updateUser(data: UpdateUserRequest): Promise<User> {
+    const isFormData = data.photo instanceof File;
+    
+    if (isFormData) {
+      const formData = new FormData();
+      formData.append('full_name', data.full_name);
+      if (data.city && data.city.trim()) {
+        formData.append('city', data.city.trim());
+      }
+      if (data.bio && data.bio.trim()) {
+        formData.append('bio', data.bio.trim());
+      }
+      if (data.photo instanceof File) {
+        formData.append('photo', data.photo);
+      }
+      
+      const token = this.getAuthToken();
+      const headers: Record<string, string> = {
+        'Accept': 'application/json',
+      };
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      // Не устанавливаем Content-Type для FormData - браузер сделает это автоматически с boundary
+      const response = await fetch(`${API_BASE_URL}/user`, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+
+      if (!response.ok) {
+        let error: ApiError;
+        try {
+          const errorData = await response.json();
+          let validationErrors: Record<string, string[]> = {};
+          
+          if (errorData.errors) {
+            validationErrors = errorData.errors;
+          } else if (errorData.messages) {
+            if (typeof errorData.messages === 'object' && !Array.isArray(errorData.messages)) {
+              validationErrors = errorData.messages;
+            }
+          }
+          
+          error = {
+            message: errorData.message || errorData.error || 'Ошибка обновления профиля',
+            errors: validationErrors,
+          };
+        } catch (parseError) {
+          error = {
+            message: `Ошибка ${response.status}: ${response.statusText}`,
+          };
+        }
+        throw error;
+      }
+
+      return response.json();
+    }
+
+    // Для JSON запросов без файла
+    const jsonData: any = {
+      full_name: data.full_name,
+    };
+    if (data.city && data.city.trim()) {
+      jsonData.city = data.city.trim();
+    }
+    if (data.bio && data.bio.trim()) {
+      jsonData.bio = data.bio.trim();
+    }
+
     return this.request<User>('/user', {
-      method: 'PUT',
+      method: 'POST',
+      body: JSON.stringify(jsonData),
+    });
+  }
+
+  async updatePassword(data: UpdatePasswordRequest): Promise<void> {
+    return this.request<void>('/user/password', {
+      method: 'PATCH',
       body: JSON.stringify(data),
     });
   }
@@ -193,7 +273,7 @@ class ApiService {
     if (token) {
       try {
         await this.request('/logout', {
-          method: 'POST',
+          method: 'GET',
         });
       } catch (error) {
         // Игнорируем ошибки при выходе

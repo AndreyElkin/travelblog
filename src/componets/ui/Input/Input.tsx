@@ -12,6 +12,7 @@ interface InputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   name?: string;
+  autoComplete?: string;
 }
 
 const Input: React.FC<InputProps> = ({ 
@@ -24,7 +25,8 @@ const Input: React.FC<InputProps> = ({
   value,
   onChange,
   type = 'text',
-  name
+  name,
+  autoComplete
 }) => {
   const hasError = !!errorMessage;
   const inputId = `input-${name || Math.random().toString(36).substr(2, 9)}`;
@@ -46,6 +48,7 @@ const Input: React.FC<InputProps> = ({
           value={value}
           onChange={onChange}
           name={name}
+          autoComplete={autoComplete}
         />
       ) : (
         <input
@@ -55,6 +58,7 @@ const Input: React.FC<InputProps> = ({
           placeholder={placeholder}
           defaultValue={value}
           name={name}
+          autoComplete={autoComplete}
         />
       )}
       {errorMessage && (
