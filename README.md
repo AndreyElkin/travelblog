@@ -1,73 +1,133 @@
-# React + TypeScript + Vite
+# TravelBlog
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Веб-приложение для блога о путешествиях, созданное с использованием React, TypeScript и Vite.
 
-Currently, two official plugins are available:
+## Описание
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+TravelBlog - это современное веб-приложение, которое позволяет пользователям делиться историями о своих путешествиях, просматривать посты других пользователей и управлять своим профилем.
 
-## React Compiler
+## Технологии
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19** - библиотека для создания пользовательских интерфейсов
+- **TypeScript** - типизированный JavaScript
+- **Vite** - быстрый сборщик и dev-сервер
+- **Redux Toolkit** - управление состоянием приложения
+- **React Router** - маршрутизация
+- **CSS** - стилизация компонентов
 
-## Expanding the ESLint configuration
+## Функциональность
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Авторизация и регистрация
+- Регистрация новых пользователей
+- Вход в систему
+- Выход из системы
+- Валидация форм на клиенте и сервере
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Профиль пользователя
+- Просмотр информации о пользователе
+- Редактирование персональных данных (ФИО, город, описание)
+- Загрузка и изменение фотографии профиля
+- Изменение пароля
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Посты
+- Просмотр списка постов о путешествиях
+- Просмотр детальной информации о посте
+- Создание новых постов (для авторизованных пользователей)
+- Редактирование и удаление постов
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Комментарии
+- Просмотр комментариев к постам
+- Добавление комментариев
+
+## Установка и запуск
+
+### Требования
+- Node.js (версия 18 или выше)
+- npm или yarn
+
+### Установка зависимостей
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Запуск в режиме разработки
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+Приложение будет доступно по адресу `http://localhost:5173`
+
+### Сборка для продакшена
+
+```bash
+npm run build
+```
+
+### Предпросмотр продакшен сборки
+
+```bash
+npm run preview
+```
+
+## Структура проекта
+
+```
+travelblog/
+├── public/          # Статические файлы
+├── src/
+│   ├── assets/     # Изображения, шрифты
+│   ├── componets/ # React компоненты
+│   │   ├── Header/ # Шапка сайта
+│   │   ├── Hero/   # Главный баннер
+│   │   ├── Layout/ # Обертка страниц
+│   │   └── ui/     # UI компоненты
+│   ├── pages/      # Страницы приложения
+│   │   ├── Home/   # Главная страница с постами
+│   │   ├── Login/  # Страница входа
+│   │   ├── Register/ # Страница регистрации
+│   │   ├── Account/ # Просмотр профиля
+│   │   ├── AccountEdit/ # Редактирование профиля
+│   │   ├── Story/  # Детальная страница поста
+│   │   ├── Create/  # Создание поста
+│   │   └── Review/ # Страница комментариев
+│   ├── services/   # API сервисы
+│   ├── store/      # Redux store и slices
+│   ├── types/      # TypeScript типы
+│   └── styles/     # Глобальные стили
+├── index.html
+└── package.json
+```
+
+## API
+
+Приложение использует REST API:
+- Базовый URL: `https://travelblog.skillbox.cc/api`
+- Документация API: `https://travelblog.skillbox.cc/swagger`
+
+### Основные эндпоинты:
+- `POST /api/register` - регистрация
+- `POST /api/login` - авторизация
+- `GET /api/logout` - выход
+- `GET /api/user` - получение данных пользователя
+- `POST /api/user` - обновление профиля
+- `PATCH /api/user/password` - изменение пароля
+- `GET /api/posts` - получение списка постов
+- `GET /api/posts/{id}` - получение поста
+- `POST /api/posts` - создание поста
+- `PUT /api/posts/{id}` - обновление поста
+- `DELETE /api/posts/{id}` - удаление поста
+- `GET /api/posts/{id}/comments` - получение комментариев
+- `POST /api/posts/{id}/comments` - добавление комментария
+
+## Скрипты
+
+- `npm run dev` - запуск dev-сервера
+- `npm run build` - сборка для продакшена
+- `npm run preview` - предпросмотр продакшен сборки
+- `npm run lint` - проверка кода линтером
+
+## Лицензия
+
+Проект создан в образовательных целях.
