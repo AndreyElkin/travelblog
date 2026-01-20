@@ -186,7 +186,7 @@ const Register: React.FC = () => {
       </form>
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleModalConfirm}
         message="Вы успешно зарегистрировались!"
       />
     </section>
