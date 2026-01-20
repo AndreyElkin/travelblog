@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import './Header.css';
 import logoImage from '../../assets/images/logo-travel.png';
-import photoUserDefault from '../../assets/images/photo-user-1.jpg';
+import photoUserDefault from '../../assets/images/none-photo.png';
 import User from '../ui/User/User';
 import { useAppSelector } from '../../store/hooks';
 import type { RootState } from '../../store/store';

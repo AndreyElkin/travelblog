@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import './AccountEdit.page.css';
-import photoUser from '../../assets/images/photo-user-1.jpg';
+import photoUser from '../../assets/images/none-photo.png';
 import Button from '../../componets/ui/Button/Button';
 import Input from '../../componets/ui/Input/Input';
 import TextArea from '../../componets/ui/TextArea/TextArea';

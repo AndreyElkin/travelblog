@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import './Account.page.css';
-import photoUser from '../../assets/images/photo-user-1.jpg';
+import photoUser from '../../assets/images/none-photo.png';
 import Button from '../../componets/ui/Button/Button';
 import Spinner from '../../componets/ui/Spinner/Spinner';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
