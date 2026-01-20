@@ -107,7 +107,7 @@ const Story: React.FC = () => {
         <p className='story__description'>{post.description || post.excerpt || ''}</p>
         
         {post.userInfo && (
-          <div className='story__user-info' style={{ marginTop: '20px', padding: '15px', background: '#f5f5f5', borderRadius: '8px' }}>
+          <div className='story__user-info'>
             <h3 style={{ margin: '0 0 10px 0', fontSize: '18px', fontWeight: 600 }}>Автор поста</h3>
             <p style={{ margin: '5px 0', fontSize: '16px' }}><strong>ФИО:</strong> {post.userInfo.full_name}</p>
             {post.userInfo.city && (
@@ -124,13 +124,13 @@ const Story: React.FC = () => {
             <li key="loading" style={{ listStyle: 'none', width: '100%' }}>
               <Spinner />
             </li>
-          ) : comments.length > 0 ? (
-            comments.map((comment) => (
-              <li key={comment.id}>
+          ) : comments && comments.length > 0 ? (
+            comments.map((comment, index) => (
+              <li key={comment.id || `comment-${index}`}>
                 <Comment 
                   name={comment.name || 'Анонимный пользователь'} 
                   date={formatDate(comment.created_at)} 
-                  text={comment.text} 
+                  text={comment.text || ''} 
                 />
               </li>
             ))

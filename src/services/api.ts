@@ -301,19 +301,15 @@ class ApiService {
 
   async getComments(postId: number): Promise<Comment[]> {
     const response = await this.request<any[]>(`/posts/${postId}/comments`);
-    console.log('API Comments Response:', response);
-    // Преобразуем ответ API в формат Comment (API может возвращать comment вместо text, full_name вместо name)
-    return response.map((item: any) => {
-      console.log('Comment item:', item);
-      return {
-        id: item.id,
-        post_id: item.post_id,
-        name: item.name || item.full_name || item.author_name || '',
-        text: item.text || item.comment || '',
-        created_at: item.created_at,
-        updated_at: item.updated_at,
-      };
-    }) as Comment[];
+    // Преобразуем ответ API в формат Comment (API возвращает author_name и comment)
+    return response.map((item: any) => ({
+      id: item.id,
+      post_id: item.post_id,
+      name: item.author_name || item.name || item.full_name || '',
+      text: item.comment || item.text || '',
+      created_at: item.created_at,
+      updated_at: item.updated_at,
+    })) as Comment[];
   }
 
   async createComment(postId: number, data: { comment: string; full_name: string }): Promise<Comment> {
@@ -321,12 +317,12 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify(data),
     });
-    // Преобразуем ответ API в формат Comment
+    // Преобразуем ответ API в формат Comment (API возвращает author_name и comment)
     return {
       id: response.id,
       post_id: response.post_id || postId,
-      name: response.name || response.full_name || data.full_name,
-      text: response.text || response.comment || data.comment,
+      name: response.author_name || response.name || response.full_name || data.full_name,
+      text: response.comment || response.text || data.comment,
       created_at: response.created_at,
       updated_at: response.updated_at,
     } as Comment;

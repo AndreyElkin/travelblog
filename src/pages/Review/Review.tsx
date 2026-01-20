@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 import type { FormEvent } from 'react';
 import './Review.page.css';
@@ -51,6 +51,8 @@ const Review: React.FC = () => {
 
     if (!name || !name.trim()) {
       errors.name = 'Имя обязательно';
+    } else if (name.length > 255) {
+      errors.name = 'Имя не должно превышать 255 символов';
     }
 
     if (!text || !text.trim()) {
@@ -133,6 +135,28 @@ const Review: React.FC = () => {
     return '';
   };
 
+  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+    setLocalError((prev) => {
+      if (prev.name) {
+        const { name, ...rest } = prev;
+        return rest;
+      }
+      return prev;
+    });
+  }, []);
+
+  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value);
+    setLocalError((prev) => {
+      if (prev.text) {
+        const { text, ...rest } = prev;
+        return rest;
+      }
+      return prev;
+    });
+  }, []);
+
   if (!postId) {
     return null;
   }
@@ -148,12 +172,7 @@ const Review: React.FC = () => {
           errorMessage={getFieldError('name')} 
           width='100%' 
           value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-            if (localError.name) {
-              setLocalError({ ...localError, name: undefined });
-            }
-          }}
+          onChange={handleNameChange}
           autoComplete="name"
           name="name"
         />
@@ -165,12 +184,7 @@ const Review: React.FC = () => {
           errorMessage={getFieldError('text')} 
           value={text} 
           maxLength={600}
-          onChange={(e) => {
-            setText(e.target.value);
-            if (localError.text) {
-              setLocalError({ ...localError, text: undefined });
-            }
-          }}
+          onChange={handleTextChange}
           name="text"
         />
 

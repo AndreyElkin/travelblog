@@ -30,6 +30,13 @@
   line-height: 24px;
 }
 
+.story__user-info {
+  padding: 15px;
+  margin: 0 0 50px 0;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
 .story__comments-list {
   display: flex;
   flex-direction: column;
