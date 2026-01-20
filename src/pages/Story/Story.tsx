@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router';
 import './Story.page.css';
-import storyImage from '../../assets/images/img-story.jpg';
 import Comment from '../../componets/ui/Comment/Comment';
 import Button from '../../componets/ui/Button/Button';
 import Spinner from '../../componets/ui/Spinner/Spinner';
@@ -97,7 +96,7 @@ const Story: React.FC = () => {
 
   const postImage = post.photo 
     ? `https://travelblog.skillbox.cc${post.photo}` 
-    : (post.image || storyImage);
+    : (post.image || '');
 
   return (
     <section className="story container">

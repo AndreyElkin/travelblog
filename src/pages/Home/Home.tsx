@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import image from '../../assets/images/img-card.jpg';
 import CardPost from '../../componets/ui/CardPost/CardPost';
 import Button from '../../componets/ui/Button/Button';
 import Spinner from '../../componets/ui/Spinner/Spinner';
@@ -43,7 +42,7 @@ function Home() {
               // Обрабатываем разные форматы полей из API
               const postImage = post.photo 
                 ? `https://travelblog.skillbox.cc${post.photo}` 
-                : (post.image || image);
+                : (post.image || '');
               const postDescription = post.excerpt || post.description || '';
               const postCountry = post.county || post.country || '';
               const location = postCountry 
