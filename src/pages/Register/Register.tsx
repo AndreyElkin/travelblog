@@ -11,7 +11,7 @@ import { registerUser, clearError } from '../../store/slices/authSlice';
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { isLoading, error, validationErrors } = useAppSelector((state) => state.auth);
+  const { isLoading, validationErrors } = useAppSelector((state) => state.auth);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState('');
